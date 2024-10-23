@@ -15,8 +15,37 @@ const createBooking = async (req, res) => {
     hotel_id,
   } = req.body;
 
+  // Validation
+  if (
+    !room_id ||
+    !user_id ||
+    !check_in_date ||
+    !check_out_date ||
+    !total_price ||
+    !quantity ||
+    !full_name ||
+    !hotel_id
+  ) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+  if (new Date(check_in_date) >= new Date(check_out_date)) {
+    return res
+      .status(400)
+      .json({ error: "'check_in_date' must be before 'check_out_date'" });
+  }
+  if (typeof total_price !== "number" || total_price <= 0) {
+    return res
+      .status(400)
+      .json({ error: "'total_price' must be a positive number" });
+  }
+  if (typeof quantity !== "number" || quantity <= 0) {
+    return res
+      .status(400)
+      .json({ error: "'quantity' must be a positive number" });
+  }
+
   try {
-    // Kiểm tra tính khả dụng của phòng
+    // Check room availability
     const room = await Room.findOne({ where: { id: room_id } });
     if (!room) {
       return res.status(400).send({ message: "Room not found" });
@@ -33,10 +62,9 @@ const createBooking = async (req, res) => {
     if ((bookedQuantity || 0) + quantity > room.quantity) {
       return res
         .status(400)
-        .send({ message: `Not enough rooms available for the selected dates` });
+        .send({ message: "Not enough rooms available for the selected dates" });
     }
 
-    // Tạo một bản ghi Booking
     const newBooking = await Booking.create({
       room_id,
       user_id,
@@ -69,25 +97,34 @@ const getAllBooking = async (req, res) => {
     full_name,
     hotel_id,
   } = req.query;
+
   let whereClause = {};
 
-  // Tạo điều kiện tìm kiếm dựa trên các query parameter được cung cấp
-  if (room_id) whereClause.room_id = room_id;
-  if (user_id) whereClause.user_id = user_id;
-  if (hotel_id) whereClause.hotel_id = hotel_id;
-  if (total_price) whereClause.total_price = total_price;
-  if (status) whereClause.status = status;
-  if (special_requests) whereClause.special_requests = special_requests;
-  if (full_name) whereClause.full_name = full_name;
-  if (check_in_date) whereClause.check_in_date = { [Op.gte]: check_in_date };
-  if (check_out_date) whereClause.check_out_date = { [Op.lte]: check_out_date };
+  // Validation
+  if (room_id && isNaN(parseInt(room_id))) {
+    return res.status(400).json({ error: "'room_id' must be a valid number" });
+  }
+  if (user_id && isNaN(parseInt(user_id))) {
+    return res.status(400).json({ error: "'user_id' must be a valid number" });
+  }
+  if (hotel_id && isNaN(parseInt(hotel_id))) {
+    return res.status(400).json({ error: "'hotel_id' must be a valid number" });
+  }
+  if (check_in_date && isNaN(new Date(check_in_date))) {
+    return res
+      .status(400)
+      .json({ error: "'check_in_date' must be a valid date" });
+  }
+  if (check_out_date && isNaN(new Date(check_out_date))) {
+    return res
+      .status(400)
+      .json({ error: "'check_out_date' must be a valid date" });
+  }
 
   try {
     let bookings;
 
-    // Kiểm tra xem whereClause có bất kỳ điều kiện nào không
     if (Object.keys(whereClause).length === 0) {
-      // Nếu không có điều kiện nào, tìm tất cả các booking
       bookings = await Booking.findAll({
         include: [
           {
@@ -97,7 +134,6 @@ const getAllBooking = async (req, res) => {
         ],
       });
     } else {
-      // Nếu có điều kiện, tìm các booking dựa trên điều kiện đã được xác định
       bookings = await Booking.findAll({
         where: whereClause,
       });
@@ -114,7 +150,7 @@ const getDetailBooking = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Tìm kiếm chi tiết đặt phòng dựa trên ID
+    // Find booking details by ID
     const booking = await Booking.findOne({
       where: { id },
       include: [
@@ -123,8 +159,8 @@ const getDetailBooking = async (req, res) => {
           attributes: ["id", "name", "price", "hotelId"],
           include: [
             {
-              model: Hotels, // Thay `Hotel` bằng tên của mô hình Hotel trong mã của bạn
-              attributes: ["name"], // Chọn các thuộc tính cần lấy từ mô hình Hotel
+              model: Hotels, // Change `Hotel` to match your model name
+              attributes: ["name"],
             },
           ],
         },
@@ -147,7 +183,7 @@ const deleteBooking = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Tìm và xóa đặt phòng dựa trên ID
+    // Find and delete booking by ID
     const deletedBooking = await Booking.destroy({
       where: { id },
     });
@@ -166,14 +202,17 @@ const deleteBooking = async (req, res) => {
 const getAvailability = async (req, res) => {
   const { checkInDate, checkOutDate, roomId, quantity } = req.query;
 
+  // Validation
+  if (!roomId || !checkInDate || !checkOutDate || !quantity) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
   try {
-    // Fetch the room details
     const room = await Room.findOne({ where: { id: roomId } });
     if (!room) {
       return res.status(400).send({ message: "Room not found" });
     }
 
-    // Calculate the total quantity of rooms already booked for the given date range
     const bookedQuantity = await Booking.sum("quantity", {
       where: {
         room_id: roomId,
@@ -182,17 +221,18 @@ const getAvailability = async (req, res) => {
       },
     });
 
-    // Calculate available quantity
     const availableQuantity = room.quantity - (bookedQuantity || 0);
 
     if (availableQuantity < quantity) {
       return res
         .status(400)
         .send({ message: "Not enough rooms available for the selected dates" });
-    } else res.status(200).send({ availableQuantity });
+    }
+
+    res.status(200).send({ availableQuantity });
   } catch (error) {
     console.error("Error checking room availability:", error);
-    res.status(500).send({ message: "Internal server error" });
+    res.status(500).send({ message: "Internal Server error" });
   }
 };
 
