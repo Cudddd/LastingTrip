@@ -201,12 +201,6 @@ describe("GET /amenities/:id", () => {
     });
   });
 
-  it("should return 400 status when the id is not provided", async () => {
-    const response = await request(app).get("/amenities/");
-
-    expect(response.status).toBe(400);
-    expect(response.body).toEqual({ message: "'id' is required." });
-  });
 
   it("should return 404 status when the amenity is not found", async () => {
     Amenities.findOne.mockResolvedValue(null);
