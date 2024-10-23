@@ -14,6 +14,51 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const createHotel = async (req, res) => {
   const { name, star, map, TypeHotel, payment, ownerId } = req.body;
 
+  // Validation
+  if (!name || typeof name !== "string") {
+    return res
+      .status(400)
+      .send({ message: "'name' is required and must be a string." });
+  }
+
+  if (!star || isNaN(star)) {
+    return res
+      .status(400)
+      .send({ message: "'star' is required and must be a number." });
+  }
+
+  if (!map || typeof map !== "string") {
+    return res
+      .status(400)
+      .send({ message: "'map' is required and must be a string." });
+  }
+
+  if (!TypeHotel || typeof TypeHotel !== "string") {
+    return res
+      .status(400)
+      .send({ message: "'TypeHotel' is required and must be a string." });
+  }
+
+  if (!payment || typeof payment !== "string") {
+    return res
+      .status(400)
+      .send({ message: "'payment' is required and must be a string." });
+  }
+
+  if (!ownerId) {
+    return res
+      .status(400)
+      .send({ message: "'ownerId' is required and must be a valid number." });
+  }
+
+  // Ensure files are uploaded
+  const { files } = req;
+  if (!files || files.length === 0) {
+    return res
+      .status(400)
+      .send({ message: "At least one image file is required." });
+  }
+
   try {
     // Create the hotel record
     const newHotel = await Hotels.create({
@@ -24,18 +69,14 @@ const createHotel = async (req, res) => {
       payment,
       ownerId,
     });
-    console.log(newHotel);
-    const { files } = req;
-    console.log(files);
-    // Iterate over each file and create a corresponding UrlImageHotel record
+
     for (const file of files) {
       const imagePath = file.path;
-      const name = file.filename;
+      const fileName = file.filename;
 
-      // Create UrlImageHotel record associated with the new hotel
       const imageUrlRecord = await UrlImageHotel.create({
         url: imagePath,
-        file_name: name,
+        file_name: fileName,
         HotelId: newHotel.id,
       });
       console.log("Created UrlImageHotel record:", imageUrlRecord);
@@ -45,7 +86,9 @@ const createHotel = async (req, res) => {
     res.status(201).send(newHotel);
   } catch (error) {
     console.error("Error creating hotel:", error);
-    res.status(500).send(error);
+    res
+      .status(500)
+      .send({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -233,6 +276,9 @@ const getAllHotel = async (req, res) => {
 
 const getDetailHotel = async (req, res) => {
   const { id } = req.params;
+  if (!id) {
+    return res.status(400).send({ message: "'id' is required." });
+  }
   try {
     const detailHotel = await Hotels.findOne({
       where: {
@@ -261,9 +307,14 @@ const getDetailHotel = async (req, res) => {
         },
       ],
     });
+    if (!detailHotel) {
+      return res.status(404).send({ message: "Hotel not found." });
+    }
     res.status(200).send(detailHotel);
   } catch (error) {
-    res.status(500).send(error);
+    res
+      .status(500)
+      .send({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -289,18 +340,29 @@ const getDetailHotel = async (req, res) => {
 const updateHotel = async (req, res) => {
   try {
     const hotelId = req.params.id;
+
+    // Check if hotelId is provided
+    if (!hotelId) {
+      return res.status(400).send({ message: "'id' is required." });
+    }
+
     const { name, star, map, TypeHotel, cost, payment, ownerId } = req.body;
+
+    // Find the hotel by id
     const detailHotel = await Hotels.findOne({
       where: {
         id: hotelId,
       },
     });
+
     if (!detailHotel) {
-      res.status(400).send({
-        status: `error`,
-        message: `Hotel with id ${id}  not found`,
+      return res.status(404).send({
+        status: "error",
+        message: `Hotel with id ${hotelId} not found.`,
       });
     }
+
+    // Update hotel fields if provided
     if (name) detailHotel.name = name;
     if (star) detailHotel.star = star;
     if (map) detailHotel.map = map;
@@ -309,15 +371,24 @@ const updateHotel = async (req, res) => {
     if (payment) detailHotel.payment = payment;
     if (ownerId) detailHotel.ownerId = ownerId;
 
+    // Save the updated hotel
     const updateHotel = await detailHotel.save();
-    if (!updateHotel)
-      res.status(400).send({
-        error: `error`,
-        message: `Data fail to ${id} update`,
+
+    if (!updateHotel) {
+      return res.status(400).send({
+        error: "error",
+        message: `Failed to update the hotel with id ${hotelId}.`,
       });
+    }
+
+    // Return the updated hotel
     res.status(200).send({ updateHotel });
   } catch (error) {
-    res.status(500).send(error);
+    // Handle server-side errors
+    res.status(500).send({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 
@@ -357,8 +428,9 @@ const deleteHotel = async (req, res) => {
     await Promise.all(deleteImagePromises);
 
     // Sau khi đã xóa hết các hình ảnh liên quan, tiến hành xóa khách sạn
-    await deletedHotel.destroy({ cascade: true });
-
+    await Hotels.destroy({
+      where: { id },
+    });
     // Phản hồi thành công sau khi xóa khách sạn và hình ảnh
     res.status(200).send("Xóa khách sạn và các hình ảnh liên quan thành công");
   } catch (error) {
@@ -368,28 +440,34 @@ const deleteHotel = async (req, res) => {
 };
 
 const searchIdHotelByName = async (req, res) => {
-  const { hotelName } = req.body; // Lấy tên khách sạn từ body của yêu cầu
+  const { hotelName } = req.body;
+
+  // Validate if hotelName is provided
+  if (!hotelName || hotelName.trim() === "") {
+    return res.status(400).json({ message: "'hotelName' is required." });
+  }
 
   try {
-    // Tìm khách sạn dựa trên tên
+    // Search for hotel by name
     const hotel = await Hotels.findOne({
       where: {
         name: hotelName,
       },
     });
 
-    // Kiểm tra xem khách sạn có tồn tại không
+    // Check if the hotel exists
     if (!hotel) {
       return res.status(404).json({ message: "Không tìm thấy khách sạn" });
     }
 
-    // Gửi hotelId của khách sạn tìm được
+    // Send the hotelId of the found hotel
     res.status(200).json({ hotelId: hotel.id });
   } catch (error) {
     console.error("Lỗi khi tìm kiếm khách sạn:", error);
     res.status(500).json({ message: "Lỗi máy chủ nội bộ" });
   }
 };
+
 const getAllMaps = async (req, res) => {
   try {
     // Lấy tất cả các địa chỉ từ bảng Hotels

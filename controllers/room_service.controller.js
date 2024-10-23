@@ -2,10 +2,17 @@ const { roomService, Amenities, Room } = require("../models/");
 
 // Controller để lấy danh sách các amenities của một khách sạn
 async function getroomService(req, res) {
-  const roomId = req.params.roomId;
+  const { roomId } = req.params;
+
+  // Validation: Check if roomId is provided and is a valid number
+  if (!roomId || isNaN(roomId)) {
+    return res
+      .status(400)
+      .json({ message: "'roomId' is required and must be a valid number." });
+  }
 
   try {
-    // Tìm khách sạn dựa trên roomId
+    // Fetch room services based on roomId
     const RoomService = await roomService.findAll({
       where: { roomId },
       include: [{ model: Amenities }],
@@ -19,13 +26,12 @@ async function getroomService(req, res) {
 }
 
 async function getService(req, res) {
-  const {id} = req.params;
+  const { id } = req.params;
 
   try {
     // Tìm khách sạn dựa trên roomId
     const RoomService = await roomService.findAll({
-      where: { id : id },
-      
+      where: { id: id },
     });
 
     res.json(RoomService);
@@ -56,6 +62,13 @@ async function getRoomHaveAmenities(req, res) {
 async function searchRoomsByAmenities(req, res) {
   const { amenities } = req.body;
 
+  // Validation: Check if amenities are provided and is an array
+  if (!amenities || !Array.isArray(amenities) || amenities.length === 0) {
+    return res.status(400).json({
+      message: "'amenities' is required and must be a non-empty array.",
+    });
+  }
+
   try {
     // Tìm các khách sạn chứa các tiện nghi đã chọn
     const RoomService = await roomService.findAll({
@@ -78,6 +91,19 @@ async function searchRoomsByAmenities(req, res) {
 async function addRoomAmenity(req, res) {
   const { roomId, serviceId } = req.body;
 
+  // Validation checks
+  if (!roomId || typeof roomId !== "number") {
+    return res.status(400).json({
+      message: "'roomId' is required and must be a valid number.",
+    });
+  }
+
+  if (!serviceId || typeof serviceId !== "number") {
+    return res.status(400).json({
+      message: "'serviceId' is required and must be a valid number.",
+    });
+  }
+
   try {
     const RoomAmenity = await roomService.create({
       roomId,
@@ -94,6 +120,27 @@ async function addRoomAmenity(req, res) {
 async function updateRoomAmenity(req, res) {
   const RoomserviceId = req.params.id;
   const { roomId, serviceId } = req.body;
+
+  // Validate that RoomserviceId is a number
+  if (!RoomserviceId || isNaN(RoomserviceId)) {
+    return res.status(400).json({
+      message:
+        "'id' in the request parameter is required and must be a valid number.",
+    });
+  }
+
+  // Validate that roomId and serviceId are provided and are valid numbers
+  if (!roomId || isNaN(roomId)) {
+    return res.status(400).json({
+      message: "'roomId' is required and must be a valid number.",
+    });
+  }
+
+  if (!serviceId || isNaN(serviceId)) {
+    return res.status(400).json({
+      message: "'serviceId' is required and must be a valid number.",
+    });
+  }
 
   try {
     const RoomAmenity = await roomService.findByPk(RoomserviceId);

@@ -14,7 +14,7 @@ module.exports = {
      */
 
     await queryInterface.bulkInsert(
-      "hotels",
+      "Hotels",
       [
         {
           name: "Cozrum Homes - Sonata Residence",
@@ -367,6 +367,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("hotels", null, {});
+    await queryInterface.bulkDelete("Hotels", null, {});
   },
 };

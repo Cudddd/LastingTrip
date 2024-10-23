@@ -13,7 +13,7 @@ module.exports = {
      * }], {});
      */
 
-    await queryInterface.bulkInsert("amenities", [
+    await queryInterface.bulkInsert("Amenities", [
       {
         name: "Khu vực tắm nắng ",
         class: "fa-solid fa-umbrella",
@@ -185,6 +185,6 @@ module.exports = {
      * Example:
      *
      */
-    await queryInterface.bulkDelete("amenities", null, {});
+    await queryInterface.bulkDelete("Amenities", null, {});
   },
 };

@@ -258,7 +258,6 @@ module.exports = {
   deleteUser,
   updateImage,
   getDetailUser,
-  // checkEmailExist,
   updatePassword,
   loginGG
 };

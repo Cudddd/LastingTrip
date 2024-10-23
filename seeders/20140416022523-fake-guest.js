@@ -17,7 +17,7 @@ module.exports = {
     // password: DataTypes.STRING,
     // numberPhone: DataTypes.STRING,
     // type: DataTypes.STRING,
-    await queryInterface.bulkInsert("users", [
+    await queryInterface.bulkInsert("Users", [
       {
         name: "Antonio Goodwin",
         email: "michaelreed@example.org",
@@ -358,6 +358,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("users", null, {});
+    await queryInterface.bulkDelete("Users", null, {});
   },
 };

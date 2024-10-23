@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert("roomservices", [
+    await queryInterface.bulkInsert("roomServices", [
       {
         "roomId": 1,
         "serviceId": 23,
@@ -883,6 +883,6 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     // Xóa tất cả dữ liệu từ bảng Rooms
-    await queryInterface.bulkDelete("roomservices", null, {});
+    await queryInterface.bulkDelete("roomServices", null, {});
   },
 };

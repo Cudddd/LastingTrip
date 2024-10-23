@@ -1,38 +1,56 @@
 const { UrlImageRoom } = require("../models");
 const cloudinary = require("cloudinary").v2;
+
 const createUrlImageRoom = async (req, res) => {
-  {
-    try {
-      const { IdRoom } = req.body;
+  try {
+    const { IdRoom } = req.body;
 
-      const { files } = req;
-      console.log(files);
-      // Iterate over each file and create a corresponding UrlImageHotel record
-      for (const file of files) {
-        const imagePath = file.path;
-        const name = file.filename;
-
-        // Create UrlImageHotel record associated with the new hotel
-        const imageUrlRecord = await UrlImageRoom.create({
-          url: imagePath,
-          file_name: name,
-          IdRoom: IdRoom,
-        });
-      }
-      res.status(201).send("successful");
-    } catch (error) {
-      console.log("Error creating UrlHotel:", error);
-      res.status(500).send(error);
+    // Validation: Check if IdRoom is provided and is a valid number
+    if (!IdRoom || isNaN(IdRoom)) {
+      return res.status(400).json({
+        message: "'IdRoom' is required and must be a valid number.",
+      });
     }
+
+    const { files } = req;
+
+    // Proceed with file creation if validation passes
+    console.log(files);
+    for (const file of files) {
+      const imagePath = file.path;
+      const name = file.filename;
+
+      // Create UrlImageRoom record associated with the new room
+      await UrlImageRoom.create({
+        url: imagePath,
+        file_name: name,
+        IdRoom: IdRoom,
+      });
+    }
+
+    res.status(201).send("successful");
+  } catch (error) {
+    console.log("Error creating UrlImageRoom:", error);
+    res.status(500).send({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 
 const getUrlImageRoomById = async (req, res) => {
   const { IdRoom } = req.query;
 
+  // Validate that IdRoom is provided and is a valid number
+  if (!IdRoom || isNaN(IdRoom)) {
+    return res.status(400).json({
+      message: "'IdRoom' is required and must be a valid number.",
+    });
+  }
+
   try {
     const urls = await UrlImageRoom.findAll({ where: { IdRoom: IdRoom } });
-    if (!urls) {
+    if (!urls || urls.length === 0) {
       return res.status(404).json({ error: "urlRoom not found" });
     }
     res.status(200).json(urls);
@@ -44,14 +62,28 @@ const getUrlImageRoomById = async (req, res) => {
 
 const updateUrlImageRoom = async (req, res) => {
   const { id } = req.params;
-  const { url, IdRoom } = req.body; // Change HotelId to IdRoom
+  const { url, IdRoom } = req.body;
+
+  // Validation: Check if url and IdRoom are provided
+  if (!url) {
+    return res.status(400).json({ message: "'url' is required." });
+  }
+
+  if (!IdRoom || isNaN(IdRoom)) {
+    return res.status(400).json({
+      message: "'IdRoom' is required and must be a valid number.",
+    });
+  }
 
   try {
     const urlRoom = await UrlImageRoom.findByPk(id);
     if (!urlRoom) {
       return res.status(404).json({ error: "urlRoom not found" });
     }
-    await urlRoom.update({ url, IdRoom }); // Change HotelId to IdRoom
+
+    // Update the record
+    await urlRoom.update({ url, IdRoom });
+    urlRoom.url = url;
     res.status(200).json(urlRoom);
   } catch (error) {
     console.error("Error updating urlRoom:", error);

@@ -14,7 +14,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert("hotelamenities", [
+    await queryInterface.bulkInsert("HotelAmenities", [
       {
         hotelId: 1,
         amenityId: 5,
@@ -673,6 +673,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("hotelamenities", null, {});
+    await queryInterface.bulkDelete("HotelAmenities", null, {});
   },
 };

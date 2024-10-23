@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    await queryInterface.bulkInsert("urlimagehotels", [
+    await queryInterface.bulkInsert("UrlImageHotels", [
       {
         url: "https://res.cloudinary.com/de1a04hrb/image/upload/v1716730521/LastingTrip/hoakv0wsy2n5kq2lmio0.jpg",
         createdAt: "2024-05-26 13:35:21",
@@ -1544,6 +1544,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("urlimagehotels", null, {});
+    await queryInterface.bulkDelete("UrlImageHotels", null, {});
   },
 };

@@ -13,7 +13,7 @@ module.exports = {
      * }], {});
      *
      */
-    await queryInterface.bulkInsert("reviews", [
+    await queryInterface.bulkInsert("Reviews", [
       {
         rating: 5,
         description:
@@ -1824,6 +1824,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("reviews", null, {});
+    await queryInterface.bulkDelete("Reviews", null, {});
   },
 };

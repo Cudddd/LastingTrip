@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "rooms",
+      "Rooms",
       [
         {
           name: "Grand Suite",
@@ -2059,6 +2059,6 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     // Xóa tất cả dữ liệu từ bảng Rooms
-    await queryInterface.bulkDelete("rooms", null, {});
+    await queryInterface.bulkDelete("Rooms", null, {});
   },
 };

@@ -13,7 +13,7 @@ module.exports = {
      * }], {});
      */
 
-    await queryInterface.bulkInsert("urlimagerooms", [
+    await queryInterface.bulkInsert("UrlImageRooms", [
       {
         url: "https://res.cloudinary.com/de1a04hrb/image/upload/v1715618475/LastingTrip/jfjzzth7v3btgvwwtyly.webp",
         file_name: "LastingTrip/jfjzzth7v3btgvwwtyly",
@@ -5204,6 +5204,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete("urlimagerooms", null, {});
+    await queryInterface.bulkDelete("UrlImageRooms", null, {});
   },
 };

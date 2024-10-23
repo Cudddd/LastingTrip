@@ -3,6 +3,24 @@ const { Amenities } = require("../models");
 const { Op } = require("sequelize");
 const createAmenity = async (req, res) => {
   const { name, Aclass } = req.body;
+
+  // Validation
+  if (!name || typeof name !== "string" || name.trim() === "") {
+    return res.status(400).send({ message: "'name' is required." });
+  }
+
+  if (!Aclass || typeof Aclass !== "string" || Aclass.trim() === "") {
+    return res.status(400).send({ message: "'Aclass' is required." });
+  }
+
+  if (name.length < 3) {
+    return res.status(400).send({ message: "'name' is too short." });
+  }
+
+  if (name.length > 255) {
+    return res.status(400).send({ message: "'name' is too long." });
+  }
+
   try {
     const newAmenity = await Amenities.create({
       name,
@@ -41,15 +59,23 @@ const getAllAmenity = async (req, res) => {
 
 const getDetailAmenity = async (req, res) => {
   const { id } = req.params;
+  if (!id) {
+    return res.status(400).send({ message: "'id' is required." });
+  }
   try {
     const detailAmenity = await Amenities.findOne({
       where: {
         id,
       },
     });
+    if (!detailAmenity) {
+      return res.status(404).send({ message: "Amenity not found." });
+    }
     res.status(200).send(detailAmenity);
   } catch (error) {
-    res.status(500).send(error);
+    res
+      .status(500)
+      .send({ message: "Internal Server Error", error: error.message });
   }
 };
 

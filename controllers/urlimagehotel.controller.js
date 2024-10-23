@@ -2,35 +2,62 @@ const { UrlImageHotel } = require("../models");
 const { Op, literal } = require("express");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 const createUrlImageHotel = async (req, res) => {
   try {
     const { HotelId } = req.body;
     const { files } = req;
-    console.log(files);
+
+    // Validate HotelId
+    if (!HotelId || isNaN(HotelId)) {
+      return res.status(400).json({
+        message: "'HotelId' is required and must be a valid number.",
+      });
+    }
+
     // Iterate over each file and create a corresponding UrlImageHotel record
     for (const file of files) {
       const imagePath = file.path;
       const name = file.filename;
 
       // Create UrlImageHotel record associated with the new hotel
-      const imageUrlRecord = await UrlImageHotel.create({
+      await UrlImageHotel.create({
         url: imagePath,
         file_name: name,
         HotelId: HotelId,
       });
     }
+
     res.status(201).send("successful");
   } catch (error) {
     console.log("Error creating UrlHotel:", error);
-    res.status(500).send(error);
+    res.status(500).send({
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 
 const getUrlImageHotelById = async (req, res) => {
   const { HotelId } = req.query; // Lấy hotelId từ URL parameter
+
+  // Validation: Check if HotelId is provided and if it's a valid number
+  if (!HotelId) {
+    return res
+      .status(400)
+      .json({ message: "'HotelId' is required and must be provided." });
+  }
+
+  if (isNaN(HotelId)) {
+    return res
+      .status(400)
+      .json({ message: "'HotelId' must be a valid number." });
+  }
+
   try {
     // Tìm tất cả các đường dẫn ảnh có HotelId tương ứng
     const urls = await UrlImageHotel.findAll({ where: { HotelId: HotelId } });
+
     if (!urls || urls.length === 0) {
       return res
         .status(404)
@@ -59,18 +86,31 @@ const updateUrlImageHotel = async (req, res) => {
   const { id } = req.params;
   const { url, HotelId } = req.body;
 
+  // Validation checks
+  if (!url) {
+    return res.status(400).json({ message: "'url' is required." });
+  }
+
+  if (!HotelId || isNaN(HotelId)) {
+    return res
+      .status(400)
+      .json({ message: "'HotelId' is required and must be a valid number." });
+  }
+
   try {
     const urlHotel = await UrlImageHotel.findByPk(id);
     if (!urlHotel) {
       return res.status(404).json({ error: "UrlHotel not found" });
     }
     await urlHotel.update({ url, HotelId });
+    urlHotel.url = url;
     res.status(200).json(urlHotel);
   } catch (error) {
     console.error("Error updating UrlHotel:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 const deleteUrlImageHotel = async (req, res) => {
   const { id } = req.params;
 
