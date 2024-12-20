@@ -146,7 +146,7 @@ $(document).ready(() => {
 
       const stars = `<i class="fas fa-star"></i>`.repeat(item.star);
       const card = `
-        <div class="card mb-3">
+        <div data-cost=${item.cost} data-type=${item.TypeHotel} class="card mb-3">
           <div class="row img-adjust g-0">
             <a href="/hotel/${slug}/${item.id}" class="hotel-link wrap-img">
               <div class="col-md-4">
@@ -164,7 +164,7 @@ $(document).ready(() => {
                     <p>${description}</p>
                     <p>
                       <i class="fa-solid fa-location-dot"></i>${item.map}
-                      <span><button class="btn" data-bs-toggle="modal" onclick="redirectToMap('${item.name}' )" style="color: blue">Xem bản đồ</button></span>
+                      <span><button class="btn go-to-map-btn" data-bs-toggle="modal" onclick="redirectToMap('${item.name}' )" style="color: blue">Xem bản đồ</button></span>
                     </p>
                   </div>
                 </div>
@@ -177,7 +177,7 @@ $(document).ready(() => {
                   </div>
                   <div class="room-price">
                     <p>VND ${formattedCost}</p>
-                    <a href="/hotel/${slug}/${item.id}" class="btn btn-primary">Kiểm tra</a>
+                    <a href="/hotel/${slug}/${item.id}" class="btn btn-primary room-check-btn">Kiểm tra</a>
                   </div>
                 </div>
                 <div class="get-lower-price" id="broadcast">

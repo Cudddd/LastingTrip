@@ -33,15 +33,15 @@ const register = async (req, res) => {
     });
   }
 
-  if (
-    !type ||
-    typeof type !== "string" ||
-    (type !== "user" && type !== "admin")
-  ) {
-    return res.status(400).json({
-      error: "'type' is required and must be either 'user' or 'admin'.",
-    });
-  }
+  // if (
+  //   !type ||
+  //   typeof type !== "string" ||
+  //   (type !== "user" && type !== "admin")
+  // ) {
+  //   return res.status(400).json({
+  //     error: "'type' is required and must be either 'user' or 'admin'.",
+  //   });
+  // }
 
   try {
     // Kiểm tra xem email hoặc số điện thoại đã tồn tại hay chưa

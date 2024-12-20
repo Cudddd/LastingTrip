@@ -111,26 +111,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const token = getToken(); // Lấy token
 
   // Sự kiện click vào class toUserInfo
-  document.querySelector(".toUserInfo").addEventListener("click", function () {
-    // Kiểm tra nếu có token
-    if (token) {
-      if (
-        localStorage.getItem("type") == "client" ||
-        localStorage.getItem("type") == "admin"
-      ) {
-        // Di chuyển đến trang userInfor
-        window.location.href = "/userInfor";
-      } else if (localStorage.getItem("type") == "owner") {
-        // Di chuyển đến trang userInfor
-        window.location.href = "/agentInfo";
-      } else {
-        // Hiển thị thông báo yêu cầu đăng nhập
-        alert("Vui lòng đăng nhập để xem thông tin cá nhân.");
-        // Chuyển hướng đến trang login
-        window.location.href = "/signin";
-      }
-    }
-  });
+  // document.querySelector(".toUserInfo").addEventListener("click", function () {
+  //   // Kiểm tra nếu có token
+  //   if (token) {
+  //     if (
+  //       localStorage.getItem("type") == "client" ||
+  //       localStorage.getItem("type") == "admin"
+  //     ) {
+  //       // Di chuyển đến trang userInfor
+  //       window.location.href = "/userInfor";
+  //     } else if (localStorage.getItem("type") == "owner") {
+  //       // Di chuyển đến trang userInfor
+  //       window.location.href = "/agentInfo";
+  //     } else {
+  //       // Hiển thị thông báo yêu cầu đăng nhập
+  //       alert("Vui lòng đăng nhập để xem thông tin cá nhân.");
+  //       // Chuyển hướng đến trang login
+  //       window.location.href = "/signin";
+  //     }
+  //   }
+  // });
   document.querySelector(".toUserInf").addEventListener("click", function () {
     // Kiểm tra nếu có token
     if (token) {

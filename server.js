@@ -26,14 +26,14 @@ app.use(
 
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded());
-// app.use(
-//   session({
-//     secret: process.env.SECRET_KEY, // Sử dụng khóa bí mật từ biến môi trường hoặc một khóa mặc định
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { secure: false }, // Đặt thành true nếu sử dụng HTTPS
-//   })
-// );
+app.use(
+  session({
+    secret: '8d7f09b0a8c4e2f19b7d5c1a6e3f4d2c', // Sử dụng khóa bí mật từ biến môi trường hoặc một khóa mặc định
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Đặt thành true nếu sử dụng HTTPS
+  })
+);
 
 app.get("/image/classify", async (req, res) => {
   const { url } = req.query;
