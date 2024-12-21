@@ -134,7 +134,7 @@ $(document).ready(function () {
             '                    <i class="fa-solid fa-id-card"></i>';
           tableHtml += "                    <span>CCCD</span>";
           tableHtml += "                </div>";
-          tableHtml += '                <div class="user-name">';
+          tableHtml += '                <div class="user-name cccd">';
           tableHtml += user.cccd;
           tableHtml += "                </div>";
           tableHtml += "            </div>";
@@ -143,7 +143,7 @@ $(document).ready(function () {
           tableHtml += '                    <i class="fa-solid fa-map"></i>';
           tableHtml += "                    <span>Địa chỉ</span>";
           tableHtml += "                </div>";
-          tableHtml += '                <div class="user-name">';
+          tableHtml += '                <div class="user-name address">';
           tableHtml += user.address;
           tableHtml += "                </div>";
           tableHtml += "            </div>";
@@ -397,7 +397,7 @@ $(document).ready(function () {
             },
             success: function (data) {
               renderPage();
-              console.log("Chỉnh sửa thông tin người dùng thành công");
+              alert("Chỉnh sửa thông tin người dùng thành công");
             },
             error: function (error) {
               console.log("Lỗi khi chỉnh sửa thông tin người dùng", error);
@@ -455,6 +455,7 @@ $(document).ready(function () {
           success: function (data) {
             isUpdatePasswordSuccess = true;
             renderPage();
+            alert("Cập nhật mật khẩu thành công");
             console.log("Cập nhật mật khẩu thành công");
           },
           error: function (error) {
