@@ -90,7 +90,6 @@ $(document).ready(function () {
     // Lấy ID người dùng từ thuộc tính data
     let id = $(".popup-delete").attr("data-id");
     console.log("id booking", id);
-
     // Gửi yêu cầu xóa người dùng
     $.ajax({
       url: `http://localhost:3030/api/v1/booking/${id}`,
@@ -99,13 +98,15 @@ $(document).ready(function () {
         // Xử lý thành công
         $(".popup-overlay-delete").hide();
         $(".popup-delete").hide();
-
+        alert("Xóa booking thành công!");
         // Gọi lại hàm renderPage để cập nhật trang
         renderPage();
       },
       error: function (error) {
         // Xử lý lỗi
         console.log("Đã xảy ra lỗi khi xóa booking:", error);
+
+        alert("Error xóa booking")
       },
     });
   });

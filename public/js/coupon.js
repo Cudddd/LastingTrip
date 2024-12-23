@@ -53,6 +53,8 @@ $(document).ready(function () {
     var percent = $("#percent").val();
     var begin = $("#begin").val();
     var end = $("#end").val();
+    if (code == "" || percent == "" || begin == "" || end == "") {
+      alert("Please fill in all fields");}
     console.log(code, percent, begin, end);
 
     $.ajax({
@@ -68,11 +70,13 @@ $(document).ready(function () {
         renderPage();
 
         console.log("Coupon created successfully:", response);
+        alert("Coupon created successfully");
         $(".coupon-popup-overlay").hide();
         $(".coupon-popup").hide();
       },
       error: function (xhr, status, error) {
         console.error("Error creating coupon:", error);
+        alert("Error creating coupon");
       },
     });
   });
@@ -101,6 +105,7 @@ $(document).ready(function () {
       method: "DELETE",
       success: function (data) {
         // Xử lý thành công
+        alert("Xóa coupon thành công")
         $(".popup-overlay-delete").hide();
         $(".popup-delete").hide();
         renderPage();
@@ -108,6 +113,7 @@ $(document).ready(function () {
       error: function (error) {
         // Xử lý lỗi
         console.log("Đã xảy ra lỗi khi xóa coupon", error);
+        alert("Đã xảy ra lỗi khi xóa coupon");
       },
     });
   });
