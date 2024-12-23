@@ -224,7 +224,13 @@ const editUser = async (req, res) => {
       });
     }
 
-    if (type && type !== "user" && type !== "admin") {
+    if (
+      type &&
+      type !== "user" &&
+      type !== "admin" &&
+      type !== "client" &&
+      type !== "owner"
+    ) {
       return res
         .status(400)
         .json({ error: "'type' must be either 'user' or 'admin'." });
@@ -286,9 +292,7 @@ const updatePassword = async (req, res) => {
 
   // Validation
   if (!userId) {
-    return res
-      .status(400)
-      .json({ error: "'userId' is required." });
+    return res.status(400).json({ error: "'userId' is required." });
   }
 
   if (
@@ -296,12 +300,10 @@ const updatePassword = async (req, res) => {
     typeof currentPassword !== "string" ||
     currentPassword.length < 6
   ) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "'currentPassword' is required and must be at least 6 characters long.",
-      });
+    return res.status(400).json({
+      error:
+        "'currentPassword' is required and must be at least 6 characters long.",
+    });
   }
 
   if (
@@ -309,12 +311,10 @@ const updatePassword = async (req, res) => {
     typeof newPassword !== "string" ||
     newPassword.length < 6
   ) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "'newPassword' is required and must be at least 6 characters long.",
-      });
+    return res.status(400).json({
+      error:
+        "'newPassword' is required and must be at least 6 characters long.",
+    });
   }
 
   try {

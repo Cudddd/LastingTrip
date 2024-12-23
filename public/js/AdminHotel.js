@@ -30,12 +30,12 @@ $(document).ready(function () {
         var tableHtml = "";
         data.forEach(function (user, index) {
           // Tạo HTML cho từng hàng trong bảng
-          tableHtml += "<tr>";
-          tableHtml += "<td>" + (index + 1) + "</td>";
-          tableHtml += "<td>" + user.name + "</td>";
+          tableHtml += `<tr data-id='${index + 1}'>`;
+          tableHtml += "<td >" + (index + 1) + "</td>";
+          tableHtml += `<td class="name">` + user.name + "</td>";
           tableHtml += "<td>" + user.email + "</td>";
-          tableHtml += "<td>" + user.numberPhone + "</td>";
-          tableHtml += "<td>" + user.type + "</td>";
+          tableHtml += `<td class="phone">` + user.numberPhone + "</td>";
+          tableHtml += `<td class="type">` + user.type + "</td>";
           tableHtml += "<td>";
           tableHtml +=
             '<button type="button" class="editUser" value="' +
@@ -106,7 +106,8 @@ $(document).ready(function () {
         $(".popup-overlay-delete").hide();
         $(".popup-delete").hide();
 
-        // Gọi lại hàm renderPage để cập nhật trang
+        alert("Người dùng đã được xoá.");
+
         renderPage();
       },
       error: function (error) {
@@ -372,7 +373,6 @@ $(document).ready(function () {
             success: function (data) {
               // Xử lý thành công, sau khi sửa, gọi lại hàm renderPage để cập nhật trang
               renderPage();
-              console.log("Người dùng đã được sửa.");
             },
             error: function (error) {
               console.log("Đã xảy ra lỗi khi sửa người dùng:", error);
