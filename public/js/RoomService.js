@@ -28,7 +28,7 @@ $(document).ready(function () {
                 amenities.forEach(function (amenity) {
                   console.log(amenity.id);
                   if (amenity.id == service.serviceId) {
-                    tableHtml += "<td>" + amenity.name + "</td>";
+                    tableHtml += '<td class="service-name">' + amenity.name + "</td>";
                   }
                 });
               }
@@ -206,7 +206,8 @@ $(document).ready(function () {
     $.ajax({
       url: `http://localhost:3030/api/v1/roomAmenities/${id}`,
       method: "DELETE",
-      success: function (data) {},
+      success: function (data) {
+      },
       error: function (error) {
         console.log("Lỗi khi xóa người dùng", id, error);
       },

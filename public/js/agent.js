@@ -10,8 +10,8 @@ $(document).ready(function () {
           // Tạo HTML cho từng hàng trong bảng
           tableHtml += "<tr>";
           tableHtml += '<td class="col1">' + (index + 1) + "</td>";
-          tableHtml += '<td class="col2" >' + hotel.name + "</td>";
-          tableHtml += '<td class="col1">' + hotel.star + "</td>";
+          tableHtml += '<td class="col2 name" >' + hotel.name + "</td>";
+          tableHtml += '<td class="col1 star">' + hotel.star + "</td>";
           // tableHtml += '<td class="col2">' + hotel.map + "</td>";
           // console.log(hotel.map);
           var text = hotel.map;
@@ -31,14 +31,14 @@ $(document).ready(function () {
           cityList.forEach((tu) => {
             if (text && text.includes(tu)) {
               text = tu;
-              tableHtml += '<td class="col2">' + text + "</td>";
+              tableHtml += '<td class="col2 adress">' + text + "</td>";
             }
           });
 
-          tableHtml += '<td class="col2">' + hotel.TypeHotel + "</td>";
-          tableHtml += '<td class="col2">' + hotel.cost + "</td>";
-          tableHtml += '<td class="col2">' + hotel.payment + "</td>";
-          tableHtml += '<td class="col1">' + hotel.ownerId + "</td>";
+          tableHtml += '<td class="col2 type">' + hotel.TypeHotel + "</td>";
+          tableHtml += '<td class="col2 cost">' + hotel.cost + "</td>";
+          tableHtml += '<td class="col2 payment">' + hotel.payment + "</td>";
+          tableHtml += '<td class="col1 owner">' + hotel.ownerId + "</td>";
           tableHtml += "<td>";
 
           // Thêm button Chỉnh sửa

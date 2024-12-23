@@ -29,7 +29,7 @@ $(document).ready(function () {
                 amenities.forEach(function (amenity) {
                   console.log(amenity.id);
                   if (amenity.id == service.amenityId) {
-                    tableHtml += "<td>" + amenity.name + "</td>";
+                    tableHtml += '<td class="name">' + amenity.name + "</td>";
                   }
                 });
               }
@@ -149,6 +149,7 @@ $(document).ready(function () {
           console.log("Service created successfully:", response);
           // Optionally, perform additional actions after successful creation
           // alert("Service created successfully!");
+         alert("Service created successfully");
 
           $(".custom-popup-overlay").hide();
           $(".custom-popup").hide();
@@ -208,6 +209,7 @@ $(document).ready(function () {
       url: `http://localhost:3030/api/v1/hotelAmenities/${id}`,
       method: "DELETE",
       success: function (data) {
+        alert("Xoá dịch vụ thành công")
         $(".popup-overlay-delete").hide();
         $(".popup-delete").hide();
         renderPage();
