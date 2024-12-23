@@ -36,17 +36,6 @@
 
 <!-- Giới thiệu đồ án -->
 
-# Giới thiệu nhóm
-
-Xin chào mọi người! Chúng em là **Nhóm 11** đến từ lớp **NT208.O22.ANTT**.
-Nhóm chúng em gồm 5 thành viên:
-
-- **22521376** - Trịnh Thị Bích Thảo (Nhóm trưởng)
-- **22521541** - Thái Ngọc Diễm Trinh
-- **22521444** - Huỳnh Trung Thuận
-- **22521446** - Lê Hiệp Thuận
-- **22521202** - Nguyễn Đình Quang
-
 # Giới thiệu đồ án
 
 Link deploy web: https://lastingtrip-674584f294be.herokuapp.com/
