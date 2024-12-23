@@ -38,8 +38,6 @@
 
 # Giới thiệu đồ án
 
-Link deploy web: https://lastingtrip-674584f294be.herokuapp.com/
-
 ## Lý do chọn đề tài
 
 Ngành du lịch và khách sạn đang phát triển mạnh mẽ. Mọi người ngày càng tìm kiếm thông tin và đặt phòng qua internet. Một trang website đặt phòng khách sạn sẽ đáp ứng nhu cầu này. Trang web này có thể giúp người dùng dễ dàng tìm kiếm và so sánh các khách sạn, xem thông tin chi tiết về phòng, giá cả, và đặt phòng trực tuyến. Điều này giúp tiết kiệm thời gian và tạo thuận lợi cho khách hàng.
