@@ -234,7 +234,7 @@ $(document).ready(function () {
   //           success: function (data) {
   //             // Xử lý thành công, sau khi sửa, gọi lại hàm renderPage để cập nhật trang
   //             renderPage();
-  //             console.log("Người dùng đã được sửa.");
+  //             console.log("Cập nhật người dùng thành công");
   //           },
   //           error: function (error) {
   //             console.log("Đã xảy ra lỗi khi sửa người dùng:", error);

@@ -54,7 +54,7 @@ $(document).ready(function () {
     var begin = $("#begin").val();
     var end = $("#end").val();
     if (code == "" || percent == "" || begin == "" || end == "") {
-      alert("Please fill in all fields");}
+      alert("Please fill in all fields"); return;}
     console.log(code, percent, begin, end);
 
     $.ajax({
